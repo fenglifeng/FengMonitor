@@ -1,0 +1,104 @@
+$def with(rows)
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>设备列表</title>
+<link rel="stylesheet" type="text/css" href="$config.static/css/base.css">
+<script language="javascript"  src="$config.static/js/jquery/jquery-1.11.1.min.js"></script>
+<script language="javascript"  src="$config.static/js/archives.js">
+function viewArc(aid){
+	if(aid==0) aid = getOneItem();
+	window.open("archives.asp?aid="+aid+"&action=viewArchives");
+}
+function editArc(aid){
+	if(aid==0) aid = getOneItem();
+	location="archives.asp?aid="+aid+"&action=editArchives";
+}
+
+function checkArc(aid){
+	var qstr=getCheckboxItem();
+	if(aid==0) aid = getOneItem();
+	location="archives.asp?aid="+aid+"&action=checkArchives&qstr="+qstr+"";
+}
+
+function adArc(aid){
+	var qstr=getCheckboxItem();
+	if(aid==0) aid = getOneItem();
+	location="archives.asp?aid="+aid+"&action=commendArchives&qstr="+qstr+"";
+}
+
+function refreshopage(){
+   window.location.reload();
+}
+</script>
+<script language="javascript">
+$$(function(){
+    function refreshlist(){
+    	var url = "relist";
+    	$$.getJSON( url, function( data ) {
+    		$$(data).each(function(index,row){
+    			var id = row[2];
+    			$$("#AC_P"+id).text(row[4]);
+    			if(row[4]>0){
+    				$$("#SIStatus"+id).text("运行");
+    			}else{
+    				$$("#SIStatus"+id).text(" ");
+    			}
+    			$$("#HZ"+id).text(row[7]);
+    			//$$("#Exception"+id).text(row[4]);
+    			$$("#AC_V"+id).text(row[5]);
+    			$$("#AC_I"+id).text(row[6]);
+			});
+		});
+	}
+	t = setInterval(refreshlist, 5000); 
+	refreshlist();
+});
+</script>
+
+</head>
+<body leftmargin="8" topmargin="8" >
+
+
+<!--  快速转换位置按钮  -->
+
+  
+<!--  内容列表   -->
+<form name="form2">
+
+<table width="98%" border="0" cellpadding="2" cellspacing="1" bgcolor="#D1DDAA" align="center" style="margin-top:8px">
+<tr bgcolor="#E7E7E7">
+	<td height="24" colspan="12" >&nbsp;设备列表&nbsp;</td>
+</tr>
+<tr align="center" bgcolor="#FAFAF1" height="22">
+	<td width="3%">选择</td>
+	<td width="5%">站点</td>
+	<td width="6%">相位</td>
+	<td width="10%">IP</td>
+	<td width="8%">输出功率（kw）</td>
+	<td width="8%">输出电压（）</td>	
+	<td width="8%">输出电流（A）</td>
+	<td width="9%">并网频率（HZ）</td>
+	<td width="8%">工作状态</td>
+	<td width="10%">异常信息</td>
+	<td width="10%">故障查询</td>
+	<td width="8%">详情</td>
+<!---	<td width="10%">操作</td> ---->
+</tr>
+
+	$for row in rows:
+		<tr align="center" bgcolor="#FFFFFF" onmousemove="javascript:this.bgColor='#FCFDEE';" onmouseout="javascript:this.bgColor='#FFFFFF';" height="22"><td><input name="id" type="checkbox" id="id" value="25" class="np"></td><td id="SINum$row[2]">$row[2]</td><td>$row[1]</td><td>$row[0]</td><td id="AC_P$row[2]">$row[4]</td><td id="AC_V$row[2]">$row[5]</td><td id="AC_I$row[2]">$row[6]</td><td id="HZ$row[2]">$row[7]</td><td id="SIStatus$row[2]"></td><td id="Exception$row[2]"></td><td><a href="#">故障查询</a></td><td><a href="info?sinum=$row[2]">设备详情</a></td></tr>
+
+<tr bgcolor="#FAFAF1">
+<td height="28" colspan="12">
+	&nbsp;
+	<a href="javascript:refreshopage()" class="coolbg">刷新</a>
+	<a href="javascript:selAll()" class="coolbg">全选</a>
+	<a href="javascript:noSelAll()" class="coolbg">取消</a>
+	<!--<a href="javascript:DelArc(0)" class="coolbg">&nbsp;删除&nbsp;</a>-->
+</td>
+</tr>
+</table>
+</form>
+</body>
+</html>

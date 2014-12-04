@@ -1,0 +1,85 @@
+$def with(ac_p,daypower,allpower)
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <link href="$config.static/css/examples.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="$config.static/css/datepicker.css"><!-- The default theme -->
+    <link rel="stylesheet" type="text/css" href="$config.static/css/text.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="$config.static/css/layout.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="$config.static/css/nav.css" media="screen" />
+    <script language="javascript"  src="$config.static/js/jquery/jquery-1.11.1.min.js"></script>
+    <script language="javascript" type="text/javascript" src="$config.static/js/datepicker.js"></script>
+    <script language="javascript" type="text/javascript" src="$config.static/js/flot/jquery.flot.js"></script>
+    <script language="javascript" type="text/javascript" src="$config.static/js/flot/jquery.flot.time.js"></script>
+    <script language="javascript" type="text/javascript" src="$config.static/js/flot/jquery.flot.barnumbers.js"></script>
+    <script language="javascript" type="text/javascript" src="$config.static/js/flot/date.js"></script>
+    <script language="javascript" type="text/javascript" src="$config.static/js/yschartfunction.js"></script>
+    <script language="javascript">
+        $$(function(){
+            t = setInterval(refreshlist, 5000); 
+            refreshlist();
+            ThisDay();
+            reloaddaychart(0);
+            $$("#inputday").change(function(){
+                reloadchart(0); 
+            });
+            $$("#mselect").change(function(){
+                reloadchart(0);
+            });
+        });
+    </script>
+</head>
+
+<body onload=" ">         
+    <div class="box round first">    
+        <input type="hidden" name="sinum" id="sinum" value="-1">         
+        <select id="mselect" name="select">
+            <option value="1">时发电量</option>
+            <option value="2">日发电量</option>
+        </select>
+         日期:<input type="text" datepicker data-date-format="yyyy-mm-dd" data-auto-close="true" id ="inputday" >
+        <center><h1><span id="imginfo">电站时发电量</span></h1> </center>
+        <div class="demo-container">          
+            <div id="placeholder" class="demo-placeholder"></div>
+        </div>                  
+       
+    </div>
+    <div class="box round">
+    <h2>信息</h2>       
+        <div class="block">
+            <div class="stat-col">
+                <span>今日发电量kwh</span>
+                <p class="yellow" id ="daypower">$daypower</p>
+            </div>
+            <div class="stat-col">
+                <span>输出功率kw</span>
+                <p class="yellow" id ="AC_P">$ac_p</p>
+            </div>
+            <div class="stat-col">
+                <span id="unit">总发电量 MWh</span>
+                <p class="yellow"  id="allpower">$(allpower/1000.0)</p>
+            </div> 
+            <div class="clear"></div>
+        </div>
+    </div>
+
+    <div class="box round">
+        <h2>减排（单位：T）</h2>
+        <div class="block">
+            <div class="stat-col">
+                <span>二氧化碳</span>
+                <p class="yellow">$(allpower * 0.872 / 1000)</p>
+            </div>
+            <div class="stat-col">
+                <span>二氧化硫</span>
+                <p class="yellow">$(allpower * 0.0263 / 1000)</p>
+            </div>
+            <div class="stat-col">
+                <span>氮氧化物</span>
+                <p class="yellow">$(allpower * 0.0131 / 1000)</p>
+            </div> 
+            <div class="clear"></div>
+        </div>
+    </div>
+</body> 
+</html>

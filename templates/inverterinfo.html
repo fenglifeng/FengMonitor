@@ -1,0 +1,203 @@
+$def with(sinum,rowparam,rowmain)
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="$config.static/css/examples.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="$config.static/css/datepicker.css"><!-- The default theme -->
+<link rel="stylesheet" type="text/css" href="$config.static/css/text.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="$config.static/css/layout.css" media="screen" />
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../../excanvas.min.js"></script><![endif]-->
+<script language="javascript" type="text/javascript" src="$config.static/js/flot/jquery.js"></script>
+<script language="javascript" type="text/javascript" src="$config.static/js/datepicker.js"></script>
+<script language="javascript" type="text/javascript" src="$config.static/js/flot/jquery.flot.js"></script>
+<script language="javascript" type="text/javascript" src="$config.static/js/flot/jquery.flot.time.js"></script>
+<script language="javascript" type="text/javascript" src="$config.static/js/flot/date.js"></script>
+<script type="text/javascript">
+$$(function() {
+    var dataurl = "reACP";
+    function loaddata(datas)
+    {
+        var d1 = [];
+        var d2 = datas;
+        var d3 = [];
+        var d4 =[];
+        for (var i = 0; i < 120; i += 1) {
+            //d3[i] = Date.UTC(2014, 10, 18, Math.round(i/5), Math.round(i%5), 0)
+            d3[i]=Math.round(i/5)+":"+ Math.round(i%5)*12+"0:00";
+            d1.push([i, d2[i]]);
+            if(Math.round(i%10) ==0 ){d4.push([i,d3[i]]);}      
+        }
+
+        $$.plot("#placeholder", [{
+                data: d1,
+                lines: { show: true },
+                points: { show: true }
+            }],{
+                yaxis:{min:0},
+                xaxis: {ticks:d4}
+            });  
+    }
+    function reloadchart(){
+        $$.ajax({
+            url: dataurl,
+            type: "GET",
+            dataType:"json",
+            data:{    
+                sinum:$sinum,
+                day:$$("#inputday").val()
+             },
+            success:function(data){
+                loaddata(data);
+            },
+            error : function() {    
+                // view("异常！");    
+                //alert("异常！");    
+            }  
+        });
+    }
+
+    function ThisDay()
+    {
+        var now = new Date();      
+        var year = now.getFullYear();       //年
+        var month = now.getMonth() + 1;     //月
+        var day = now.getDate();            //日
+
+        var clock = year + "-";       
+        if(month < 10)
+            clock += "0";      
+        clock += month + "-";       
+        if(day < 10)
+            clock += "0";          
+        clock += day;
+        $$("#inputday").val(clock);
+    }
+    
+    ThisDay();
+
+    $$("#inputday").change(function(){
+        reloadchart(); 
+    });
+    
+    reloadchart();
+});
+</script>
+</head>
+<body onload="">
+
+<div id="main" >
+
+    <h2>$sinum号逆变器</h2><input type="hidden" name="sinum" id="sinum" >     
+    <p align="center"><b><font color="#37de2e">功率曲线</font></b> 日期: <input type="text" datepicker data-date-format="yyyy-mm-dd" data-auto-close="true" id ="inputday" ><p> 
+    <div class="demo-container">
+        <div id="placeholder" class="demo-placeholder"></div>
+    </div>
+    <div class="box round">
+        <h2>信息</h2>
+        <div class="block">
+            <div class="stat-col">
+                <span>今日发电量wh</span>
+                <p class="yellow">$rowmain[1]</p>
+            </div>
+            <div class="stat-col">
+                <span>输出功率kw</span>
+                <p class="yellow">$rowmain[0]</p>
+            </div>
+            <div class="stat-col">
+                <span>总发电量kWh</span>
+                <p class="yellow">$rowmain[2]</p>
+            </div>
+            <div class="stat-col">
+                <span href ="#">&nbsp</span>
+                <p class="green"> <a href ="/inverterpower?sinum=$sinum">
+                    发电量统计</a></p>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <div class="box round">
+        <h2>详细信息</h2>
+        <div class="block"> 
+            $if rowparam == None:  
+                <div class="stat-col">
+                    <span>运行状态</span>
+                    <p class="red">未连接</p>
+                </div>
+            $else:
+                <div class="stat-col">
+                    <span>并网功率Kw</span>
+                    <p class="yellow" id="acp">$rowparam[5]</p>
+                </div>
+                <div class="stat-col">
+                    <span>并网电压V</span>
+                    <p class="yellow" id="acv">$rowparam[3]</p>
+                </div>
+                <div class="stat-col">
+                    <span>并网电流A</span>
+                    <p class="yellow" id="aci">$rowparam[4]</p>
+                </div>
+                <div class="stat-col">
+                    <span>并网频率HZ</span>
+                    <p class="yellow" id="hz">$rowparam[12]</p>
+                </div>
+                <div class="stat-col">
+                    <span>逆变器温度℃</span>
+                    <p class="yellow" id="t">$rowparam[19]</p>
+                </div>
+                <div class="stat-col">
+                    <span>A相网流A</span>
+                    <p class="yellow" id="ai">$rowparam[7]</p>
+                </div>
+                <div class="stat-col">
+                    <span>A相网压V</span>
+                    <p class="yellow" id="av">$rowparam[6]</p>
+                </div>
+                <div class="stat-col">
+                    <span>B相网流A</span>
+                    <p class="yellow" id="bi">$rowparam[9]</p>
+                </div>
+                <div class="stat-col">
+                    <span>B相网压V</span>
+                    <p class="yellow" id="bv">$rowparam[8]</p>
+                </div>
+                <div class="stat-col">
+                    <span>C相网流A</span>
+                    <p class="yellow" id="ci">$rowparam[11]</p>
+                </div>
+                <div class="stat-col">
+                    <span>C相网压V</span>
+                    <p class="yellow" id="cv">$rowparam[10]</p>
+                </div>
+                <div class="stat-col">
+                    <span>DC1路直流电压V</span>
+                    <p class="yellow" id="dc1v">$rowparam[13]</p>
+                </div>
+                <div class="stat-col">
+                    <span>DC1路直流电流A</span>
+                    <p class="yellow" id="dc1i">$rowparam[14]</p>
+                </div>
+                <div class="stat-col">
+                    <span>DC1路直流功率kW</span>
+                    <p class="yellow" id="dc1p">$rowparam[15]</p>
+                </div>
+                <div class="stat-col">
+                    <span>DC2路直流电压V</span>
+                    <p class="yellow" id="dc2v">$rowparam[16]</p>
+                </div>
+                <div class="stat-col">
+                    <span>DC2路直流电流A</span>
+                    <p class="yellow" id="dc2i">$rowparam[17]</p>
+                </div>
+                <div class="stat-col">
+                    <span>DC2路直流功率kW</span>
+                    <p class="yellow" id="dc2p">$rowparam[18]</p>
+                </div>
+                <div class="clear"></div>
+        </div>
+    </div>       
+</div>
+</body>
+
+</html>
+

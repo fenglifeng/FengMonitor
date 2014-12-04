@@ -1,0 +1,7 @@
+--2014-08-05 15:57:22--  http://192.168.1.64/share/ys/static/menu.css
+Connecting to 192.168.1.64:80... connected.
+HTTP request sent, awaiting response... Read error (Connection reset by peer) in headers.
+Retrying.
+
+--2014-08-05 15:58:10--  (try: 2)  http://192.168.1.64/share/ys/static/menu.css
+Connecting to 192.168.1.64:80... failed: Connection refused.
