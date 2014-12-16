@@ -8,7 +8,7 @@ web.config.debug = True
 
 
 config = web.storage(
-    email='qichangxing@gmail.com',
+    email='fenglifeng1987@163.com',
     site_name = 'ys',
     site_desc = '',
     static = '/static',
