@@ -5,5 +5,5 @@ class YsLow10:
 	def __init__(self):
 		pass
 	def createbuff(self,SINum):
-		array = [SINum,0x03,0xe4,0x21]
+		array = [SINum,0x03,0x00,0xe4,0x00,0x21]
 		return self.crc.createarray(array)
