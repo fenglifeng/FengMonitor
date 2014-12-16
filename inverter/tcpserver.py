@@ -74,7 +74,9 @@ def OnTimeSave(args):
 	return
 
 SocketServer.ThreadingTCPServer.allow_reuse_address = True
+#监控进程
 tcpserver = SocketServer.ThreadingTCPServer(ADDR,RequerstHandler)
+#定时存储
 ontime = Pysettimer(OnTimeSave,timeout=60,is_loop=True)	
 ontime.start()
 tcpserver.serve_forever()

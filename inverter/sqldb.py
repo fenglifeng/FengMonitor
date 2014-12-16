@@ -3,6 +3,7 @@ from sip import *
 import time,datetime
 
 class sqldb:
+	#dbname 可根据自身需求修改
 	dbname = "/home/pi/192.168.1.64/share/ys/inverter/test.db"
 	def __init__(self):
 		pass
